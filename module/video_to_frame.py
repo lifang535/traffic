@@ -43,12 +43,14 @@ class VideoToFrame(Process):
         # sort by image name
         input_image_files.sort(key=lambda x: int(x.split('.')[0])) # input_image_files ?
         
-        image_files = sorted([f for f in os.listdir(self.input_image_dir) if f.endswith('.jpg')])
+        image_files = sorted([f for f in os.listdir(self.input_image_dir) if f.endswith('.png')])
         
         video_id = 0
         frame_id = 0
         total_frames = len(image_files)
         video_fps = 30
+        
+        print(f"[VideoToFrame] video_id: {video_id}, total_frames: {total_frames}, video_fps: {video_fps}")
         
         adjust_frame_interval = time.time()
 

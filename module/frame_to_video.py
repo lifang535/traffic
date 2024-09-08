@@ -396,8 +396,9 @@ class FrameToVideo(Process):
         plt.close()
 
     def _end(self):
-        self.draw_latency() # add
-        self.draw_times() # add
+        # self.draw_latency() # add
+        # self.draw_times() # add
+        
         # self.draw_flops() # add
         
         self.end_flag = True

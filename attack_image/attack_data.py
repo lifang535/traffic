@@ -163,7 +163,7 @@ def attack(
         added_blob = np.round(added_blob).astype(np.uint8)
         
         # frame_id = 0 # TODO
-        save_path = f"{attacking_image_dir}/{frame_id:06d}.jpg"
+        save_path = f"{attacking_image_dir}/{frame_id:06d}.png"
         # print(f"========== save_path: {save_path} ==========")
         cv2.imwrite(save_path, added_blob)
         
