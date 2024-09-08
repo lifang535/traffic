@@ -1,15 +1,15 @@
 method = 'after_defending' # 'before_attacking' or 'after_attacking'
 
 config = {
-    'input_video_dir': '../evaluation_input_video',
+    'input_video_dir': '../input_video',
     
-    'output_video_dir': '../evaluation_output_video',
+    'output_video_dir': '../output_video', # use
     
     'video_number': 1,
     
     'video_start_id': 4,
     
-    'input_image_dir': f'../input_image/{method}',
+    'input_image_dir': f'../input_image/{method}', # use
     
     'output_image_dir': f'../output_image/{method}',
     

@@ -41,7 +41,7 @@ class VideoToFrame(Process):
     def _read_image(self):
         input_image_files = os.listdir(self.input_image_dir)
         # sort by image name
-        input_image_files.sort(key=lambda x: int(x.split('.')[0]))
+        input_image_files.sort(key=lambda x: int(x.split('.')[0])) # input_image_files ?
         
         image_files = sorted([f for f in os.listdir(self.input_image_dir) if f.endswith('.jpg')])
         

@@ -34,8 +34,6 @@ image_processor_path = f"../model/yolo-tiny/yolos-tiny_image_processor.pth"
 yolo_model = torch.load(yolo_model_path, map_location=device)
 yolo_image_processor = torch.load(image_processor_path, map_location=device)
 
-save_dir = f"data_after_attacking/"
-
 from PIL import Image
 import logging
 
@@ -165,7 +163,7 @@ def attack(
         added_blob = np.round(added_blob).astype(np.uint8)
         
         # frame_id = 0 # TODO
-        save_path = f"{save_dir}/{frame_id:06d}.jpg"
+        save_path = f"{attacking_image_dir}/{frame_id:06d}.jpg"
         # print(f"========== save_path: {save_path} ==========")
         cv2.imwrite(save_path, added_blob)
         
@@ -225,37 +223,71 @@ def attack(
 
 
 if __name__ == "__main__":
-    frame_list = []
+    # # Read the video and extract the frames
+    # # Input: Video
+    # # Output: Attacking images
+    # frame_list = []
+    
+    # input_video_path = f"0.mp4"
+    # cap = cv2.VideoCapture(input_video_path)
+    
+    # video_fps = int(cap.get(5))
+    # total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    # print(f"video_fps = {video_fps}, total_frames = {total_frames}")
+    
+    # while True:
+    #     ret, frame = cap.read() # frame: (height, width, channel), BGR
+    #     if not ret:
+    #         break
+    #     # frame.resize((224, 224, 3))
+        
+    #     frame_array = np.array(frame) # , dtype=np.float32) # .transpose(2, 0, 1)
+    #     # print(f"frame_array.shape = {frame_array.shape}")
+        
+    #     cv2.imwrite(f"../input_image/before_attacking/{(len(frame_list) + 1):06d}.png", frame_array) # jpg -> png
+    #     frame = cv2.imread(f"../input_image/before_attacking/{(len(frame_list) + 1):06d}.png")
+    #     frame_array = np.array(frame)
+        
+    #     frame_array = cv2.cvtColor(frame_array, cv2.COLOR_BGR2RGB)
+        
+    #     frame_tensor = torch.tensor(frame_array).permute(2, 0, 1).float() / 255.0
+    #     frame_tensor = frame_tensor.unsqueeze(0)
+        
+    #     # print(f"frame_tensor.shape = {frame_tensor.shape}")
+        
+    #     frame_list.append(frame_tensor)
+        
+    # cap.release()
+    
+    # attacking_image_dir = f"../input_image/after_attacking"
+    
+    # attack(frame_list=frame_list)
+    
+    
     
     # Read the video and extract the frames
-    # Input: Video
+    # Input: Original images
     # Output: Attacking images
-    input_video_path = f"0.mp4"
-    cap = cv2.VideoCapture(input_video_path)
+    image_list = []
     
-    video_fps = int(cap.get(5))
-    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    print(f"video_fps = {video_fps}, total_frames = {total_frames}")
+    original_image_dir = f"../input_image/before_attacking"
+    attacking_image_dir = f"../input_image/after_attacking"
+
+    # sort by image name
+    original_image_files = sorted([f for f in os.listdir(original_image_dir) if f.endswith('.png')])
     
-    while True:
-        ret, frame = cap.read() # frame: (height, width, channel), BGR
-        if not ret:
-            break
-        # frame.resize((224, 224, 3))
-        frame_array = np.array(frame) # , dtype=np.float32) # .transpose(2, 0, 1)
-        # print(f"frame_array.shape = {frame_array.shape}")
+    for original_image_file in original_image_files:
+        original_image_path = f"{original_image_dir}/{original_image_file}"
         
-        frame_array = cv2.cvtColor(frame_array, cv2.COLOR_BGR2RGB)
+        image = cv2.imread(original_image_path)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = torch.tensor(image).permute(2, 0, 1).float() / 255.0
+        image = image.unsqueeze(0)
         
-        frame_tensor = torch.tensor(frame_array).permute(2, 0, 1).float() / 255.0
-        frame_tensor = frame_tensor.unsqueeze(0)
+        image_list.append(image)
         
-        # print(f"frame_tensor.shape = {frame_tensor.shape}")
-        
-        frame_list.append(frame_tensor)
-        
-    cap.release()
+    attack(frame_list=image_list)
     
-    attack(frame_list=frame_list)
+    
     
 
