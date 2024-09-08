@@ -1,7 +1,9 @@
+
 # This is a traffic pipeline project code.
+
 The correct code is stored in [lifang535/traffic](https://github.com/lifang535/traffic/tree/master).
-  
-Mainly including **VideoToFrame, ObjectDetection, LicenseRecognition, PersonRecognition, and FrameToVideo.**  
+
+Mainly including **VideoToFrame, ObjectDetection, LicenseRecognition, PersonRecognition, and FrameToVideo.**
 
 <img src="traffic_monitoring_pipeline.jpg" alt="Image" width="1000"/>
 
@@ -23,17 +25,23 @@ The modules are in `traffic/module`:
 
 ## Quick Start
 
+Download the input image and model from:
+
+- input_image: [EfficiencyAttack/input_image](https://drive.google.com/drive/folders/1bt5x5wFr2MD7RrlFclZ-jtTMrA_6Z4xn?usp=drive_link)
+- model: [EfficiencyAttack/model](https://drive.google.com/drive/folders/1rz861PT9DDSXo7eTf10O7ATLcnPYMbfP?usp=drive_link)
+
+
 Install the required libraries:
 
-``` bash
+```bash
 $ pip3 install -r requirements.txt
 ```
 
-Adjust configuration in `traffic/module/configs.py`.  
+Adjust configuration in `traffic/module/configs.py`.
 
 Execute:
 
-``` bash
+```bash
 $ cd module
 $ python3 pipeline.py
 ```
@@ -44,19 +52,19 @@ Then, the pipeline will read the videos from `traffic/input_video`, process them
 
 ### Search for the Docker image:
 
-``` bash
+```bash
 $ docker search traffic_monitoring_pipeline
 ```
 
 ### Pull the image:
 
-``` bash
+```bash
 $ docker pull lifang535/traffic_monitoring_pipeline_with_git_v3
 ```
 
 ### Create and run the container:
 
-``` bash
+```bash
 $ docker run --gpus all -it --rm --name temp traffic_monitoring_pipeline_with_git_v3
 ```
 
@@ -64,7 +72,7 @@ $ docker run --gpus all -it --rm --name temp traffic_monitoring_pipeline_with_gi
 
 All dependencies have been installed. Execute the following commands:
 
-``` bash
+```bash
 $ cd module
 $ python3 pipeline.py
 ```
