@@ -67,10 +67,14 @@ class LicenseRecognition(Process):
             
             # Relative coordinates need to be converted to absolute coordinates
             x1, y1, x2, y2 = box
-            x1 = int(x1 * frame_size[1])
-            y1 = int(y1 * frame_size[0])
-            x2 = int(x2 * frame_size[1])
-            y2 = int(y2 * frame_size[0])
+            # x1 = int(x1 * frame_size[1]) # lifang535 remove
+            # y1 = int(y1 * frame_size[0])
+            # x2 = int(x2 * frame_size[1])
+            # y2 = int(y2 * frame_size[0])
+            x1 = int(x1) # lifang535 add
+            y1 = int(y1)
+            x2 = int(x2)
+            y2 = int(y2)
             
             inputs = frame_array[y1:y2, x1:x2]
             

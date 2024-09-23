@@ -18,6 +18,7 @@ if __name__ == '__main__':
     person_queue = Queue()
     car_frame_queue = Queue()
     person_frame_queue = Queue()
+    # one_by_one = Queue()
     
     end_signal = Value('b', False)
     

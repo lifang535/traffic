@@ -14,7 +14,8 @@ from request import Request
 class VideoToFrame(Process):
     def __init__(self, 
                  config: dict,
-                 frame_queue: Queue):
+                 frame_queue: Queue,
+                 one_by_one: Queue = None):
         # super(VideoToFrame, self).__init__()
         super().__init__()
         
@@ -30,6 +31,8 @@ class VideoToFrame(Process):
         self.frame_queue = frame_queue
         
         self.end_flag = False
+        
+        self.one_by_one = one_by_one
 
     def run(self):
         print(f"[VideoToFrame] Start!")
@@ -60,7 +63,11 @@ class VideoToFrame(Process):
             # 读取图片
             image = cv2.imread(image_path)
             
-            image_array = np.array(image)
+            # image_array = np.array(image) # lifang535 remove
+            image_array = image # lifang535 add
+            
+            # print(f"image_array: {image_array}") # lifang535 add
+            
             
             request = Request(
                 video_id=video_id,
@@ -77,9 +84,13 @@ class VideoToFrame(Process):
             
             self.frame_queue.put(request)
             
+            # time.sleep(1000000) # lifang535 add
+            
             time.sleep(max(0, self.frame_interval / 1000 - (time.time() - adjust_frame_interval)))
             adjust_frame_interval = time.time()
             
+            if self.one_by_one is not None: # lifang535 add
+                _ = self.one_by_one.get()
         
     def _read_video(self):
         input_video_files = os.listdir(self.input_video_dir)

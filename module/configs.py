@@ -1,4 +1,4 @@
-method = 'before_attacking' # 'before_attacking' or 'after_attacking'
+method = 'after_attacking' # 'before_attacking', 'after_attacking' or 'after_defending'
 
 config = {
     'input_video_dir': '../input_video',
@@ -13,7 +13,7 @@ config = {
     
     'output_image_dir': f'../output_image/{method}',
     
-    'frame_interval': 1, # ms
+    'frame_interval': 5000, # 1, # ms
     
     'monitor_interval': 100, # ms
     
@@ -28,6 +28,15 @@ config = {
         'device': 'cuda:3',
         'yolo-tiny_image_processor_path': '../model/yolo-tiny/yolos-tiny_image_processor.pth',
         'yolo-tiny_model_path': '../model/yolo-tiny/yolos-tiny_model.pth',
+    },
+    
+    'yolov5': {
+        'device': 'cuda:3',
+        'yolov5_path': '../model/yolov5',
+        'yolov5n_weights_path': '../model/yolov5/yolov5n.pt',
+        'conf_thres': 0.25,
+        'iou_thres': 0.45,
+        'max_det': 1000,
     },
     
     'license_recognition': {

@@ -16,7 +16,8 @@ class FrameToVideo(Process):
     def __init__(self, 
                  config: dict,
                  car_frame_queue: Queue,
-                 person_frame_queue: Queue):
+                 person_frame_queue: Queue,
+                 one_by_one: Queue = None):
         super().__init__()
         
         self.output_video_dir = config['output_video_dir']
@@ -46,6 +47,8 @@ class FrameToVideo(Process):
         self.flops_path = config['flops_path']
 
         self.end_flag = False
+        
+        self.one_by_one = one_by_one
 
     def run(self):
         print(f"[FrameToVideo] Start!")
@@ -104,8 +107,8 @@ class FrameToVideo(Process):
             if request.box is not None:
                 self.video_dict[video_id][frame_id]['car'][car_id] = {'box': request.box, 'label': request.label}
             
-            if len(self.video_dict[video_id]) == request.frame_number:
-                self.check_video(video_id)
+            # if len(self.video_dict[video_id]) == request.frame_number: # 删掉这行是为了记录 self.process_time_dict[frame_id]（认为顺序发送不可能乱序到达下游模块）
+            self.check_video(video_id)
             
     def person_get(self):
         while not self.end_flag:
@@ -141,8 +144,8 @@ class FrameToVideo(Process):
             if request.box is not None:
                 self.video_dict[video_id][frame_id]['person'][person_id] = {'box': request.box, 'label': request.label}
 
-            if len(self.video_dict[video_id]) == request.frame_number:
-                self.check_video(video_id)
+            # if len(self.video_dict[video_id]) == request.frame_number: # 删掉这行是为了记录 self.process_time_dict[frame_id]（认为顺序发送不可能乱序到达下游模块）
+            self.check_video(video_id)
     
     # Check if the video contains all the frames, and if the frames contain all the cars and persons
     # If so, save the video as a video file
@@ -151,6 +154,8 @@ class FrameToVideo(Process):
         frame_number = self.video_dict[video_id][0]['request'].frame_number
         
         for frame_id in range(frame_number):
+            if frame_id not in self.video_dict[video_id]:
+                return
             request = self.video_dict[video_id][frame_id]['request']
             car_number = request.car_number
             person_number = request.person_number
@@ -194,10 +199,14 @@ class FrameToVideo(Process):
                 
                 # Relative coordinates need to be converted to absolute coordinates
                 x1, y1, x2, y2 = box
-                x1 = int(x1 * frame_size[1])
-                y1 = int(y1 * frame_size[0])
-                x2 = int(x2 * frame_size[1])
-                y2 = int(y2 * frame_size[0])
+                # x1 = int(x1 * frame_size[1]) # lifang535 remove
+                # y1 = int(y1 * frame_size[0])
+                # x2 = int(x2 * frame_size[1])
+                # y2 = int(y2 * frame_size[0])
+                x1 = int(x1) # lifang535 add
+                y1 = int(y1)
+                x2 = int(x2)
+                y2 = int(y2)
                 
                 # print(f"[FrameToVideo] Car box: ({x1}, {y1}, {x2}, {y2}) label {label}")
                 
@@ -210,10 +219,14 @@ class FrameToVideo(Process):
                 
                 # Relative coordinates need to be converted to absolute coordinates
                 x1, y1, x2, y2 = box
-                x1 = int(x1 * frame_size[1])
-                y1 = int(y1 * frame_size[0])
-                x2 = int(x2 * frame_size[1])
-                y2 = int(y2 * frame_size[0])
+                # x1 = int(x1 * frame_size[1]) # lifang535 remove
+                # y1 = int(y1 * frame_size[0])
+                # x2 = int(x2 * frame_size[1])
+                # y2 = int(y2 * frame_size[0])
+                x1 = int(x1) # lifang535 add
+                y1 = int(y1)
+                x2 = int(x2)
+                y2 = int(y2)
                 
                 # print(f"[FrameToVideo] Person box: ({x1}, {y1}, {x2}, {y2}) label {label}")
                 
@@ -269,9 +282,9 @@ class FrameToVideo(Process):
                 break
             
     def draw_latency(self): # add，会调用两次
-        process_time_list = [self.process_time_dict[frame_id] for frame_id in range(len(self.process_time_dict))]
-        car_number_list = [self.car_number[frame_id] for frame_id in range(len(self.car_number))]
-        person_number_list = [self.person_number[frame_id] for frame_id in range(len(self.person_number))]
+        process_time_list = [self.process_time_dict[frame_id] for frame_id in range(len(self.process_time_dict))][2:]
+        car_number_list = [self.car_number[frame_id] for frame_id in range(len(self.car_number))][2:]
+        person_number_list = [self.person_number[frame_id] for frame_id in range(len(self.person_number))][2:]
         
         print(f"[FrameToVideo] process_time_list = {process_time_list}")
         print(f"[FrameToVideo] car_number_list = {car_number_list}")
@@ -322,9 +335,9 @@ class FrameToVideo(Process):
         plt.figure(figsize=(10, 5))
         
         # 绘制折线图
-        plt.plot(self.times['od'], label='Object Detection')
-        plt.plot(self.times['lr'], label='License Recognition')
-        plt.plot(self.times['pr'], label='Person Recognition')
+        plt.plot(self.times['od'][2:], label='Object Detection')
+        plt.plot(self.times['lr'][2:], label='License Recognition')
+        plt.plot(self.times['pr'][2:], label='Person Recognition')
         
         # 添加标题和标签
         plt.title('Inference Time Over Frames')
@@ -396,8 +409,8 @@ class FrameToVideo(Process):
         plt.close()
 
     def _end(self):
-        # self.draw_latency() # add
-        # self.draw_times() # add
+        self.draw_latency() # add
+        self.draw_times() # add
         
         # self.draw_flops() # add
         

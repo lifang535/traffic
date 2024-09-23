@@ -52,40 +52,40 @@ class Monitor(Process):
             time.sleep(max(0, self.monitor_interval / 1000 - (time.time() - adjust_monitor_interval)))
             adjust_monitor_interval = time.time()
             
-        # # draw queue size
-        # # 创建一个包含 3 个子图的图形
-        # fig, axs = plt.subplots(3, 1, figsize=(10, 15))
+        # draw queue size
+        # 创建一个包含 3 个子图的图形
+        fig, axs = plt.subplots(3, 1, figsize=(10, 15))
 
-        # # 绘制第一个折线图
-        # axs[0].plot(frame_qsize, label='frame qsize')
-        # axs[0].set_title('ObjectDetection')
-        # axs[0].set_xlabel('Time')
-        # axs[0].set_ylabel('Qsize')
-        # axs[0].legend()
+        # 绘制第一个折线图
+        axs[0].plot(frame_qsize, label='frame qsize')
+        axs[0].set_title('ObjectDetection')
+        axs[0].set_xlabel('Time')
+        axs[0].set_ylabel('Qsize')
+        axs[0].legend()
 
-        # # 绘制第二个折线图
-        # axs[1].plot(car_qsize, label='car qsize', color='orange')
-        # axs[1].set_title('LicenseRecognition')
-        # axs[1].set_xlabel('Time')
-        # axs[1].set_ylabel('Qsize')
-        # axs[1].legend()
+        # 绘制第二个折线图
+        axs[1].plot(car_qsize, label='car qsize', color='orange')
+        axs[1].set_title('LicenseRecognition')
+        axs[1].set_xlabel('Time')
+        axs[1].set_ylabel('Qsize')
+        axs[1].legend()
 
-        # # 绘制第三个折线图
-        # axs[2].plot(person_qsize, label='person qsize', color='green')
-        # axs[2].set_title('PersonRecognition')
-        # axs[2].set_xlabel('Time')
-        # axs[2].set_ylabel('Qsize')
-        # axs[2].legend()
+        # 绘制第三个折线图
+        axs[2].plot(person_qsize, label='person qsize', color='green')
+        axs[2].set_title('PersonRecognition')
+        axs[2].set_xlabel('Time')
+        axs[2].set_ylabel('Qsize')
+        axs[2].legend()
 
-        # # 调整子图之间的间距
-        # plt.tight_layout()
+        # 调整子图之间的间距
+        plt.tight_layout()
 
-        # # 保存图形为 PDF 文件
-        # plt.savefig(self.qsize_path)
-        # print(f"[Monitor] saved qsize plot to {self.qsize_path}")
+        # 保存图形为 PDF 文件
+        plt.savefig(self.qsize_path)
+        print(f"[Monitor] saved qsize plot to {self.qsize_path}")
         
-        # # 关闭图形
-        # plt.close()
+        # 关闭图形
+        plt.close()
         
     def _end(self):
         self.end_flag = True

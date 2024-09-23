@@ -1,0 +1,1 @@
+2024-09-24 00:05:33,972 - INFO - objects_num_before_nms: 57, objects_num_after_nms: 4, person_num_after_nms: 2, car_num_after_nms: 2 -> _objects_num_before_nms: 2252, _objects_num_after_nms: 164, _person_num_after_nms: 163, _car_num_after_nms: 0
