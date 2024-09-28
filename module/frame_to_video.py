@@ -9,7 +9,7 @@ from multiprocessing import Process, Queue
 
 from matplotlib import pyplot as plt
 
-from configs import config
+from configs import config, method
 from request import Request
 
 class FrameToVideo(Process):
@@ -282,13 +282,25 @@ class FrameToVideo(Process):
                 break
             
     def draw_latency(self): # add，会调用两次
-        process_time_list = [self.process_time_dict[frame_id] for frame_id in range(len(self.process_time_dict))][2:]
-        car_number_list = [self.car_number[frame_id] for frame_id in range(len(self.car_number))][2:]
-        person_number_list = [self.person_number[frame_id] for frame_id in range(len(self.person_number))][2:]
+        process_time_list = [self.process_time_dict[frame_id] for frame_id in range(len(self.process_time_dict))]
+        car_number_list = [self.car_number[frame_id] for frame_id in range(len(self.car_number))]
+        person_number_list = [self.person_number[frame_id] for frame_id in range(len(self.person_number))]
         
         print(f"[FrameToVideo] process_time_list = {process_time_list}")
         print(f"[FrameToVideo] car_number_list = {car_number_list}")
         print(f"[FrameToVideo] person_number_list = {person_number_list}")
+        
+        # 记录在 logs.txt 中（续写）
+        with open('logs.txt', 'a') as f:
+            f.write(f"Method = {method}\n")
+            f.write(f"process_time_list = {process_time_list}\n")
+            f.write(f"car_number_list = {car_number_list}\n")
+            f.write(f"person_number_list = {person_number_list}\n")
+            f.write('\n')
+        
+        process_time_list = process_time_list[2:]
+        car_number_list = car_number_list[2:]
+        person_number_list = person_number_list[2:]
         
         # 创建一个包含 3 个子图的图形
         fig, axs = plt.subplots(3, 1, figsize=(10, 15))
@@ -330,6 +342,13 @@ class FrameToVideo(Process):
     
     def draw_times(self):
         print(f"[FrameToVideo] self.times = {self.times}")
+        
+        # 记录在 logs.txt 中（续写）
+        with open('logs.txt', 'a') as f:
+            f.write(f"Method = {method}\n")
+            f.write(f"times = {self.times}\n")
+            f.write('\n\n')
+        
         # 画在一张图上
         # 创建一个图形
         plt.figure(figsize=(10, 5))

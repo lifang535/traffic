@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# 定义要测试的方法列表
+methods=("single_attack")
+
+# 循环遍历每个方法
+for method in "${methods[@]}"
+do
+  # 修改 configs.py 的第一行
+  sed -i "1s/.*/method = '$method'/" configs.py
+  
+  # 输出当前测试的方法
+  echo "Testing with method = $method"
+  
+  # 执行测试
+  python3 pipeline.py
+done

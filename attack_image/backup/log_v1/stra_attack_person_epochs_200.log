@@ -1,0 +1,2 @@
+2024-09-27 20:23:18,634 - INFO - objects_num_before_nms: 57, objects_num_after_nms: 4, person_num_after_nms: 2, car_num_after_nms: 2 -> _objects_num_before_nms: 20081, _objects_num_after_nms: 1461, _person_num_after_nms: 1458, _car_num_after_nms: 0
+2024-09-27 20:23:18,830 - INFO - objects_num_before_nms: 61, objects_num_after_nms: 4, person_num_after_nms: 2, car_num_after_nms: 2 -> _objects_num_before_nms: 20081, _objects_num_after_nms: 1461, _person_num_after_nms: 1458, _car_num_after_nms: 0
